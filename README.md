@@ -37,7 +37,7 @@ pipenv install
 5. Use the token in the `main.py` script:
 
 ```bash
-python3 main.py --token <your-token> --chat-id <your-chat-id> --period <seconds> --logpath <log-file>
+python3 main.py --token <your-token> --chat-id <your-chat-id> --period <seconds> --working-dir <working-dir> [--verbose]
 ```
 
 6. Make the script executable:

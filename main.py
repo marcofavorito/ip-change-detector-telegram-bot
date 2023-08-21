@@ -12,9 +12,9 @@ import requests
 
 
 
-def configure_logger(path: str):
+def configure_logger(path: str, verbose: bool):
     logging.basicConfig(
-        level=logging.INFO,
+        level=logging.INFO if not verbose else logging.DEBUG,
         format="[%(asctime)s][%(levelname)s] %(message)s",
         handlers=[logging.FileHandler(str(path)), logging.StreamHandler()],
     )
@@ -32,6 +32,9 @@ def parse_args():
     )
     parser.add_argument(
         "--working-dir", type=str, default="work", help="Path to working directory"
+    )
+    parser.add_argument(
+        "--verbose", action="store_true", help="Make logger output more verbose"
     )
     return parser.parse_args()
 
@@ -55,7 +58,7 @@ def send_telegram_notification(message, token, chat_id):
     return response.json()
 
 
-def main(token: str, chat_id: str, working_dir: Path):
+def main(token: str, chat_id: str, working_dir: Path, verbose: bool):
     logfile = working_dir / "ip_checker.log"
     last_datetime_notified_file = working_dir / "last_datetime_notified.txt"
     old_ip_file = working_dir / "old_ip_file.txt"
@@ -64,7 +67,7 @@ def main(token: str, chat_id: str, working_dir: Path):
         last_datetime_notified_file.touch()
         old_ip_file.touch()
 
-    configure_logger(logfile)
+    configure_logger(logfile, verbose)
 
     logging.debug("*" * 125)
     logging.debug("Starting IP address checker...")
@@ -118,5 +121,6 @@ if __name__ == "__main__":
     token = args.token
     chat_id = args.chat_id
     working_dir = Path(args.working_dir).resolve()
+    verbose = args.verbose
 
-    main(token, chat_id, working_dir)
+    main(token, chat_id, working_dir, verbose)
