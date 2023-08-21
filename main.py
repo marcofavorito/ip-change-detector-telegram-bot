@@ -14,7 +14,7 @@ import requests
 
 def configure_logger(path: str):
     logging.basicConfig(
-        level=logging.DEBUG,
+        level=logging.INFO,
         format="[%(asctime)s][%(levelname)s] %(message)s",
         handlers=[logging.FileHandler(str(path)), logging.StreamHandler()],
     )
@@ -66,11 +66,11 @@ def main(token: str, chat_id: str, working_dir: Path):
 
     configure_logger(logfile)
 
-    logging.info("*" * 125)
-    logging.info("Starting IP address checker...")
-    logging.info(f"Telegram bot token: {token}")
-    logging.info(f"Telegram chat id: {chat_id}")
-    logging.info(f"Working dir: {working_dir}")
+    logging.debug("*" * 125)
+    logging.debug("Starting IP address checker...")
+    logging.debug(f"Telegram bot token: {token}")
+    logging.debug(f"Telegram chat id: {chat_id}")
+    logging.debug(f"Working dir: {working_dir}")
 
     # Read last notified datetime
     last_datetime_notified_content = last_datetime_notified_file.read_text()
@@ -87,9 +87,9 @@ def main(token: str, chat_id: str, working_dir: Path):
         old_ip = None
 
     try:
-        logging.info("Checking IP address...")
+        logging.debug("Checking IP address...")
         current_ip = get_public_ip()
-        logging.info(f"Current IP address: {current_ip}")
+        logging.debug(f"Current IP address: {current_ip}")
 
         if current_ip != old_ip:
             message = f"IP address has changed to: {current_ip}"
@@ -98,7 +98,7 @@ def main(token: str, chat_id: str, working_dir: Path):
             last_datetime_notified_file.write_text(str(last_datetime_notified))
             old_ip_file.write_text(current_ip)
         else:
-            logging.info("IP address has not changed.")
+            logging.debug("IP address has not changed.")
             # Send notification every hour, even if IP address has not changed
             if (datetime.datetime.now() - last_datetime_notified).seconds > 3600:
                 message = (
