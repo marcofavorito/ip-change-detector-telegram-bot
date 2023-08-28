@@ -103,7 +103,7 @@ def main(token: str, chat_id: str, working_dir: Path, verbose: bool):
         else:
             logging.debug("IP address has not changed.")
             # Send notification every hour, even if IP address has not changed
-            if (datetime.datetime.now() - last_datetime_notified).seconds > 3600:
+            if (datetime.datetime.now() - last_datetime_notified).days > 1:
                 message = (
                     f"IP address is {old_ip} and has not changed since {last_datetime_notified}"
                 )
